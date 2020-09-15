@@ -270,6 +270,9 @@
     object-fit: cover !important;
     height: 105% !important;
 }
+.video-box-widget {
+    z-index: 99999;
+}
 .video-box-widget .video-react.video-react-fluid, .video-react.video-react-16-9, .video-react.video-react-4-3 {
     height: calc(85vh) !important;
 }
