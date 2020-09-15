@@ -519,11 +519,9 @@ class Widget extends React.Component {
         // this.setState({apikey: apikey});
     }
     setPosition(pos) {
-        console.log(pos);
         this.setState({position: pos});
     }
     setApiKey(key) {
-        console.log(key);
         this.setState({apikey: key});
     }
 };
