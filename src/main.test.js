@@ -1,6 +1,5 @@
 
 import Config from './config';
-// import { IFrame } from './components/Widget/iframe';
 const widgetName = Config.name;
 
 beforeEach(() => {
@@ -37,5 +36,6 @@ test('initialize async test', () => {
 
     // run the widget script
     require('./main');
+
     expect(document.getElementById('root').childElementCount).toBeGreaterThan(0);
 })

@@ -1,6 +1,6 @@
 function getConfig() {
     return {
-        name: "JS-Widget"
+        name: "feedfleet-widget"
     }
 }
 

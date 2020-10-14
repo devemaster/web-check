@@ -1,529 +1,347 @@
-import React from 'react';
+import React from 'react'
+import ReactDOM from 'react-dom';
+import Config from '../../config';
 import './Widget.css';
+import Slider from 'react-slick';
 import axios from 'axios';
-import Logo from '../logo.png';
-import SpinnerImg from '../spinner.gif';
-import { Player, ControlBar } from 'video-react';
-import VolumeUpIcon from '../../assets/images/volume-up.png';
-import RepeatIcon from '../../assets/images/repeat-icon.png';
+import { Player, Shortcut } from 'video-react';
+import StarRatingComponent from 'react-star-rating-component';
+import "video-react/dist/video-react.css";
+
+const widgetName = Config.name;
 
 class Widget extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
-            apikey: null,
-            isLoading: false,
-            videoList: [],
-            errorMsg: '',
-            showVideoBox: false,
-            position: 'bottom-right',
-            volumeUp: true,
-            bgColor : 'rgb(24, 39, 247)'
-        };
-    }
-    componentDidMount() {
+          isLoading: false,
+          nav1: null,
+          nav2: null,
+          videoList: [],
+          widgetSetting: '2',
+          errorMsg: '',
+          rating: 0,
+          videoPlay:{}
+        }
+      }
+      componentDidMount() {
         this.setState({
-            isLoading: true
+          nav1: this.slider1,
+          nav2: this.slider2,
+          isLoading: true
         });
-    }
-    getVideos(apiKey) {
+        if(this.props.apiKey){
+            this.getVideos();
+        }else{
+            this.setState({
+                errorMsg: 'Unauthorized access!',
+                isLoading: false
+              }); 
+        }
+      }
+      getVideos(){
         const formData = new FormData();
-        formData.append('api_key', apiKey);
+        formData.append('api_key', this.props.apiKey);
         axios.post('https://www.feedfleet.com/Home/videoListByApiKey', formData)
-            .then((response) => {
-                // console.log(response);
-                if (response.status === 200) {
-                    if (response.data.success === true) {
-                        this.setState({
-                            videoList: response.data.data,
-                            isLoading: false
-                        });
-                    }
-                    if (response.data.success === false) {
-                        this.setState({
-                            errorMsg: response.data.data,
-                            isLoading: false
-                        });
-                    }
-                } else {
-                    this.setState({
-                        isLoading: false
-                    });
-                }
-
-            })
-            .catch((error) => {
-                // console.log(error);
-                this.setState({
-                    isLoading: false
-                });
+        .then( (response) => {
+          if (response.status === 200) {
+            if (response.data.success === true) {
+              this.setState({
+                videoList: response.data.data,
+                videoPlay:response.data.data[0],
+                widgetSetting: response.data.widget_setting,
+                isLoading: false
+              });
+            }
+            if (response.data.success === false) {
+              this.setState({
+                errorMsg: response.data.data,
+                isLoading: false
+              });
+            }
+          } else {
+            this.setState({
+              isLoading: false
             });
-    }
-    showVideo() {
-        this.setState({
-            showVideoBox: !this.state.showVideoBox
+          }
+          
+        })
+        .catch( (error) => {
+          this.setState({
+            isLoading: false
+          });
         });
-    }
-    load() {
-        this.player.load();
-    }
-    setMuted() {
-        return () => {
-          this.player.muted = !this.state.volumeUp;
+      }
+      
+      play() {
+        this.player.play();
+      }
+    
+      pause() {
+        this.player.pause();
+      }
+
+      getVideoLink(e){
+        console.log(e)
+        this.setState({
+          videoPlay:e
+        })
+      }
+
+      render() {
+        const settings = {
+          arrows: true,
+          infinite: false,
+          speed: 500,
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          responsive: [
+            {
+              breakpoint: 1200,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 1008,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 800,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 512,
+              settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+              }
+            }
+    
+          ]
         };
-    }
-    render() {
-        const { showVideoBox, position, bgColor } = this.state;
+        const settingsAgain = {
+          arrows: true,
+          infinite: false,
+          speed: 500,
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          swipeToSlide: true,
+          focusOnSelect: true,
+          responsive: [
+            {
+              breakpoint: 1200,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 1008,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 800,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 512,
+              settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+              }
+            }
+    
+          ]
+        };
+        const { videoList, widgetSetting } = this.state;
         return (
-            <div className="widget-setting">
-                {
-                    position === 'top-right' &&
+          <div className="App">
+            
+            {
+              this.state.errorMsg !== '' &&
+              <div className="error-msg">{this.state.errorMsg}</div>
+            }
+            
+            {
+              widgetSetting === '2' &&
+              <div className="container-fluid mt-4">
+                <div className="row no-gutters">
+                  <div className="col-xs-12 col-md-12 col-lg-12" >
                     <div>
+                      <div  className="double-slider">
+                        <div className="thumbnail card">
+                          <div className="img-event" >
+                              {/* <video style={{width: '100%'}} controls>
+                                <source  src={op.video_url} type="video/mp4" />
+                              </video> */}
+                              <Player
+                                fluid={false}
+                                playsInline
+                                src={this.state.videoPlay.video_url}
+                                height={400}
+                                width={'100%'}
+                                ref={player => {
+                                  this.player = player;
+                                }}
+                              />
+                          </div>
+                        </div>
+                      </div>
+    
+                      <Slider
+                        asNavFor={this.state.nav1}
+                        ref={slider => (this.slider2 = slider)}
+                        {...settingsAgain}
+                      >
                         {
-                            (!showVideoBox) &&
-                            <div className="widget-setting-position-top-right widget-box-positions" onClick={() => this.showVideo()}>
-                                <Player
-                                    src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                    height={'100vh'}
-                                    width={'100%'}
-                                    ref={player => {
-                                        this.player = player;
-                                    }}
-                                    autoPlay
-                                    muted="false"
-                                ><ControlBar></ControlBar></Player>
-                                <div className="overlay-content-video-widget">Try this now!</div>
-                            </div>
-                        }
-                        {
-                            (showVideoBox) &&
-                            <div className="widget-setting-position-open-box-top-right video-box-widget">
-                                <div className="widget-setting-position-open-box-content">
-                                    <div className="widget-setting-position-open-box-heading">
-                                        <div className="widget-setting-position-open-box-close-btn">
-                                            <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div className="widget-setting-position-open-box-btns">
-                                            <button style={{marginRight: 8}} className="btn" onClick={() => this.setMuted()}><span className="volume-up-icon"><img src={VolumeUpIcon} style={{width: 20}} /></span></button>
-                                            <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><img src={RepeatIcon} style={{width: 26}} /></span></button>
-                                        </div>
-                                    </div>
+                          videoList && videoList.map((op, i) =>
+                          <div className="slider-main-box" key={i}>
+                            <div className="thumbnail card"                              
+                            onClick={()=>this.getVideoLink(op)}>
+                              <div className="img-event" style={{pointerEvents: 'none'}} >
+                                  {/* <video style={{width: '100%', height: '100%', minHeight: '250px', maxHeight: '350px'}} controls>
+                                    <source  src={op.video_url} type="video/mp4" />
+                                  </video> */}
                                     <Player
-                                        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                        height={'100vh'}
-                                        width={'100%'}
-                                        ref={player => {
-                                            this.player = player;
-                                        }}
-                                        autoPlay
-                                    ><ControlBar></ControlBar></Player>
-                                    <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
-                                        <a style={{backgroundColor: bgColor}} className=""><span aria-hidden="true">&times;</span> Email Us </a>
-                                    </div>
-                                    <div className="widget-setting-position-open-box-powered">
-                                        <div>Powered by&nbsp;&nbsp;<img alt="Feedfleet Logo" height="18" title="Feedfleet" src={Logo}></img></div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-                }
-                {
-                    position === 'bottom-right' &&
-                    <div>
-                        {
-                            (!showVideoBox) &&
-                            <div className="widget-setting-position-bottom-right widget-box-positions" onClick={() => this.showVideo()}>
-                                <Player
-                                    src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                    height={'100vh'}
-                                    width={'100%'}
-                                    ref={player => {
+                                      fluid={false}
+                                      playsInline
+                                      src={op.video_url}
+                                      height={320}
+                                      width={'100%'}
+                                      ref={player => {
                                         this.player = player;
-                                    }}
-                                    autoPlay
-                                    muted="false"
-                                ><ControlBar></ControlBar></Player>
-                                <div className="overlay-content-video-widget">Try this now!</div>
+                                      }}
+    
+                                    />
+                              </div>
+                              <div className="card-body">
+                                <p className="card-title">{op.customer_name}</p>
+                                <StarRatingComponent 
+                                  name="rating" 
+                                  starCount={5}
+                                  editing={false}
+                                  value={Number(op.rating)}
+                                />
+                                {/* <p className="card-caption"> Campians designation</p> */}
+                              </div>
                             </div>
+                          </div>
+                          )
                         }
-                        {
-                            (showVideoBox) &&
-                            <div className="widget-setting-position-open-box-bottom-right video-box-widget">
-                                <div className="widget-setting-position-open-box-content">
-                                    <div className="widget-setting-position-open-box-heading">
-                                        <div className="widget-setting-position-open-box-close-btn">
-                                            <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div className="widget-setting-position-open-box-btns">
-                                            <button style={{marginRight: 8}} className="btn" onClick={() => this.setMuted()}><span className="volume-up-icon"><img src={VolumeUpIcon} style={{width: 20}} /></span></button>
-                                            <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><img src={RepeatIcon} style={{width: 26}} /></span></button>
-                                        </div>
-                                    </div>
-                                    <Player
-                                        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                        height={'100vh'}
-                                        width={'100%'}
-                                        ref={player => {
-                                            this.player = player;
-                                        }}
-                                        autoPlay
-                                    ><ControlBar></ControlBar></Player>
-                                    <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
-                                        <a style={{backgroundColor: bgColor}} className=""><span aria-hidden="true">&times;</span> Email Us </a>
-                                    </div>
-                                    <div className="widget-setting-position-open-box-powered">
-                                        <div>Powered by&nbsp;&nbsp;<img alt="Feedfleet Logo" height="18" title="Feedfleet" src={Logo}></img></div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
+                      </Slider>
                     </div>
-                }
-                
-                {
-                    position === 'top-left' &&
-                    <div>
+                  </div>
+                </div>
+              </div>
+            }
+            {
+              widgetSetting === '3' &&
+              <div className="container-fluid mt-4">
+                <div className="row no-gutters">
+                  <div className="col-xs-12 col-md-12 col-lg-12" >
+                    <div className="mt-5">
+                      <Slider {...settings}>
                         {
-                            (!showVideoBox) &&
-                            <div className="widget-setting-position-top-left widget-box-positions" onClick={() => this.showVideo()}>
-                                {/* <div className="widget-setting-position-icon" onClick={() => this.showVideo()}>
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-camera-reels-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M0 8a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 7.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 16H2a2 2 0 0 1-2-2V8z"/>
-                                        <circle cx="3" cy="3" r="3"/>
-                                        <circle cx="9" cy="3" r="3"/>
-                                    </svg>
-                                </div> */}
-                                <Player
-                                    src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                    height={'100vh'}
-                                    width={'100%'}
-                                    ref={player => {
+                            videoList && videoList.map((op, i) =>
+                          <div className="slider-main-box" key={i}>
+                            <div className="thumbnail card">
+                              <div className="img-event">
+                                  {/* <video style={{width: '100%', height: '100%', minHeight: '250px', maxHeight: '350px'}} controls>
+                                    <source  src={op.video_url} type="video/mp4" />
+                                  </video> */}
+                                  <Player
+                                      fluid={false}
+                                      playsInline
+                                      src={op.video_url}
+                                      height={320}
+                                      width={'100%'}
+                                      ref={player => {
                                         this.player = player;
-                                    }}
-                                    autoPlay
-                                    muted="false"
-                                ><ControlBar></ControlBar></Player>
-                                <div className="overlay-content-video-widget">Try this now!</div>
+                                      }}
+                                    ><Shortcut clickable={false} /></Player>
+                              </div>
+                              <div className="card-body">
+                                <p className="card-title">{op.customer_name}</p>
+                                <StarRatingComponent 
+                                  name="rating" 
+                                  starCount={5}
+                                  editing={false}
+                                  value={Number(op.rating)}
+                                />
+                              </div>
                             </div>
+                          </div>
+                          )
                         }
-                        {
-                            (showVideoBox) &&
-                            <div className="widget-setting-position-open-box-top-left video-box-widget">
-                                <div className="widget-setting-position-open-box-content">
-                                    <div className="widget-setting-position-open-box-heading">
-                                        <div className="widget-setting-position-open-box-close-btn">
-                                            <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div className="widget-setting-position-open-box-btns">
-                                            <button style={{marginRight: 8}} className="btn" onClick={() => this.setMuted()}><span className="volume-up-icon"><img src={VolumeUpIcon} style={{width: 20}} /></span></button>
-                                            <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><img src={RepeatIcon} style={{width: 26}} /></span></button>
-                                        </div>
-                                    </div>
-                                    <Player
-                                        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                        height={'100vh'}
-                                        width={'100%'}
-                                        ref={player => {
-                                            this.player = player;
-                                        }}
-                                        autoPlay
-                                    ><ControlBar></ControlBar></Player>
-                                    <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
-                                        <a style={{backgroundColor: bgColor}} className=""><span aria-hidden="true">&times;</span> Email Us </a>
-                                    </div>
-                                    <div className="widget-setting-position-open-box-powered">
-                                        <div>Powered by&nbsp;&nbsp;<img alt="Feedfleet Logo" height="18" title="Feedfleet" src={Logo}></img></div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
+                      </Slider>
                     </div>
-                }
-                
-                {
-                    position === 'bottom-left' &&
-                    <div>
-                        {
-                            (!showVideoBox) &&
-                            <div className="widget-setting-position-bottom-left widget-box-positions" onClick={() => this.showVideo()}>
-                                <Player
-                                    src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                    height={'100vh'}
+                  </div>
+                </div>
+              </div>
+            }
+            {
+              widgetSetting === '1' &&
+          
+              <div className="container-fluid mt-4">
+                <div className="row view-group list-view-grid">
+                  {
+                    videoList && videoList.map((op, i) =>
+                      <div className="item col-xs-12 col-lg-3 col-md-3" key={i}>
+                        <div className="thumbnail card">
+                            <div className="img-event">
+                                {/* <video style={{width: '100%', height: '320px'}} controls>
+                                  <source  src={op.video_url} type="video/mp4" />
+                                </video> */}
+                                  <Player
+                                    fluid={false}
+                                    playsInline
+                                    src={op.video_url}
+                                    height={320}
                                     width={'100%'}
-                                    ref={player => {
-                                        this.player = player;
-                                    }}
-                                    autoPlay
-                                    muted="false"
-                                ><ControlBar></ControlBar></Player>
-                                <div className="overlay-content-video-widget">Try this now!</div>
+                                  />
                             </div>
-                        }
-                        {
-                            (showVideoBox) &&
-                            <div className="widget-setting-position-open-box-bottom-left video-box-widget">
-                                <div className="widget-setting-position-open-box-content">
-                                    <div className="widget-setting-position-open-box-heading">
-                                        <div className="widget-setting-position-open-box-close-btn">
-                                            <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div className="widget-setting-position-open-box-btns">
-                                            <button style={{marginRight: 8}} className="btn" onClick={() => this.setMuted()}><span className="volume-up-icon"><img src={VolumeUpIcon} style={{width: 20}} /></span></button>
-                                            <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><img src={RepeatIcon} style={{width: 26}} /></span></button>
-                                        </div>
-                                    </div>
-                                    <Player
-                                        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                        height={'100vh'}
-                                        width={'100%'}
-                                        ref={player => {
-                                            this.player = player;
-                                        }}
-                                        autoPlay
-                                    ><ControlBar></ControlBar></Player>
-                                    <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
-                                        <a style={{backgroundColor: bgColor}} className=""><span aria-hidden="true">&times;</span> Email Us </a>
-                                    </div>
-                                    <div className="widget-setting-position-open-box-powered">
-                                        <div>Powered by&nbsp;&nbsp;<img alt="Feedfleet Logo" height="18" title="Feedfleet" src={Logo}></img></div>
-                                    </div>
-                                </div>
+                            <div className="card-body">
+                              <p className="card-title">{op.customer_name}</p>
+                                <StarRatingComponent 
+                                  name="rating" 
+                                  starCount={5}
+                                  editing={false}
+                                  value={Number(op.rating)}
+                                />
                             </div>
-                        }
-
+                        </div>
                     </div>
-                }
-
-                {
-                    position === 'center-left' &&
-                    <div>
-                        {
-                            (!showVideoBox) &&
-                            <div className="widget-setting-position-center-left widget-box-positions" onClick={() => this.showVideo()}>
-                                <Player
-                                    src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                    height={'100vh'}
-                                    width={'100%'}
-                                    ref={player => {
-                                        this.player = player;
-                                    }}
-                                    autoPlay
-                                    muted="false"
-                                ><ControlBar></ControlBar></Player>
-                                <div className="overlay-content-video-widget">Try this now!</div>
-                            </div>
-                        }
-                        {
-                            (showVideoBox) &&
-                            <div className="widget-setting-position-open-box-center-left  video-box-widget">
-                                <div className="widget-setting-position-open-box-content">
-                                    <div className="widget-setting-position-open-box-heading">
-                                        <div className="widget-setting-position-open-box-close-btn">
-                                            <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div className="widget-setting-position-open-box-btns">
-                                            <button style={{marginRight: 8}} className="btn" onClick={() => this.setMuted()}><span className="volume-up-icon"><img src={VolumeUpIcon} style={{width: 20}} /></span></button>
-                                            <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><img src={RepeatIcon} style={{width: 26}} /></span></button>
-                                        </div>
-                                    </div>
-                                    <Player
-                                        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                        height={'100vh'}
-                                        width={'100%'}
-                                        ref={player => {
-                                            this.player = player;
-                                        }}
-                                        autoPlay
-                                    ><ControlBar></ControlBar></Player>
-                                    <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
-                                        <a style={{backgroundColor: bgColor}} className=""><span aria-hidden="true">&times;</span> Email Us </a>
-                                    </div>
-                                    <div className="widget-setting-position-open-box-powered">
-                                        <div>Powered by&nbsp;&nbsp;<img alt="Feedfleet Logo" height="18" title="Feedfleet" src={Logo}></img></div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-                }
-                {
-                    position === 'center-right' &&
-                    <div>
-                        {
-                            (!showVideoBox) &&
-                            <div className="widget-setting-position-center-right widget-box-positions" onClick={() => this.showVideo()}>
-                                <Player
-                                    src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                    height={'100vh'}
-                                    width={'100%'}
-                                    ref={player => {
-                                        this.player = player;
-                                    }}
-                                    autoPlay
-                                    muted="false"
-                                ><ControlBar></ControlBar></Player>
-                                <div className="overlay-content-video-widget">Try this now!</div>
-                            </div>
-                        }
-                        {
-                            (showVideoBox) &&
-                            <div className="widget-setting-position-open-box-center-right video-box-widget">
-                                <div className="widget-setting-position-open-box-content">
-                                    <div className="widget-setting-position-open-box-heading">
-                                        <div className="widget-setting-position-open-box-close-btn">
-                                            <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div className="widget-setting-position-open-box-btns">
-                                            <button style={{marginRight: 8}} className="btn" onClick={() => this.setMuted()}><span className="volume-up-icon"><img src={VolumeUpIcon} style={{width: 20}} /></span></button>
-                                            <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><img src={RepeatIcon} style={{width: 26}} /></span></button>
-                                        </div>
-                                    </div>
-                                    <Player
-                                        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                        height={'100vh'}
-                                        width={'100%'}
-                                        ref={player => {
-                                            this.player = player;
-                                        }}
-                                        autoPlay
-                                    ><ControlBar></ControlBar></Player>
-                                    <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
-                                        <a style={{backgroundColor: bgColor}} className=""><span aria-hidden="true">&times;</span> Email Us </a>
-                                    </div>
-                                    <div className="widget-setting-position-open-box-powered">
-                                        <div>Powered by&nbsp;&nbsp;<img alt="Feedfleet Logo" height="18" title="Feedfleet" src={Logo}></img></div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-                }
-                {
-                    position === 'center-top' &&
-                    <div>
-                        {
-                            (!showVideoBox) &&
-                            <div className="widget-setting-position-center-top widget-box-positions" onClick={() => this.showVideo()}>
-                                <Player
-                                    src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                    height={'100vh'}
-                                    width={'100%'}
-                                    ref={player => {
-                                        this.player = player;
-                                    }}
-                                    autoPlay
-                                    muted="false"
-                                ><ControlBar></ControlBar></Player>
-                                <div className="overlay-content-video-widget">Try this now!</div>
-                            </div>
-                        }
-                        {
-                            (showVideoBox) &&
-                            <div className="widget-setting-position-open-box-center-top video-box-widget">
-                                <div className="widget-setting-position-open-box-content">
-                                    <div className="widget-setting-position-open-box-heading">
-                                        <div className="widget-setting-position-open-box-close-btn">
-                                            <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div className="widget-setting-position-open-box-btns">
-                                            <button style={{marginRight: 8}} className="btn" onClick={() => this.setMuted()}><span className="volume-up-icon"><img src={VolumeUpIcon} style={{width: 20}} /></span></button>
-                                            <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><img src={RepeatIcon} style={{width: 26}} /></span></button>
-                                        </div>
-                                    </div>
-                                    <Player
-                                        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                        height={'100vh'}
-                                        width={'100%'}
-                                        ref={player => {
-                                            this.player = player;
-                                        }}
-                                        autoPlay
-                                    ><ControlBar></ControlBar></Player>
-                                    <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
-                                        <a style={{backgroundColor: bgColor}} className=""><span aria-hidden="true">&times;</span> Email Us </a>
-                                    </div>
-                                    <div className="widget-setting-position-open-box-powered">
-                                        <div>Powered by&nbsp;&nbsp;<img alt="Feedfleet Logo" height="18" title="Feedfleet" src={Logo}></img></div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-                }
-                {
-                    position === 'center-bottom' &&
-                    <div>
-                        {
-                            (!showVideoBox) &&
-                            <div className="widget-setting-position-center-bottom widget-box-positions" onClick={() => this.showVideo()}>
-                                <Player
-                                    src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                    height={'100vh'}
-                                    width={'100%'}
-                                    ref={player => {
-                                        this.player = player;
-                                    }}
-                                    autoPlay
-                                    muted="false"
-                                ><ControlBar></ControlBar></Player>
-                                <div className="overlay-content-video-widget">Try this now!</div>
-                            </div>
-                        }
-                        {
-                            (showVideoBox) &&
-                            <div className="widget-setting-position-open-box-center-bottom video-box-widget">
-                                
-                                <div className="widget-setting-position-open-box-content">
-                                    <div className="widget-setting-position-open-box-heading">
-                                        <div className="widget-setting-position-open-box-close-btn">
-                                            <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div className="widget-setting-position-open-box-btns">
-                                            <button style={{marginRight: 8}} className="btn" onClick={() => this.setMuted()}><span className="volume-up-icon"><img src={VolumeUpIcon} style={{width: 20}} /></span></button>
-                                            <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><img src={RepeatIcon} style={{width: 26}} /></span></button>
-                                        </div>
-                                    </div>
-                                    <Player
-                                        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'}
-                                        height={'100vh'}
-                                        width={'100%'}
-                                        ref={player => {
-                                            this.player = player;
-                                        }}
-                                        autoPlay
-                                    ><ControlBar></ControlBar></Player>
-                                    <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
-                                        <a style={{backgroundColor: bgColor}} className=""><span aria-hidden="true">&times;</span> Email Us </a>
-                                    </div>
-                                    <div className="widget-setting-position-open-box-powered">
-                                        <div>Powered by&nbsp;&nbsp;<img alt="Feedfleet Logo" height="18" title="Feedfleet" src={Logo}></img></div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-                }
+                    )
+                  }
+                </div>
+              </div>
+          }
+            <div className="container-fluid mt-2" style={{ position: 'absolute', bottom: 0, marginTop: 20 }}>
+              <div className="row">
+                <div className="col-md-12">
+                  <div style={{ textAlign: 'right', paddingBottom: '1rem' }}>
+                   <a href="https://www.feedfleet.com" target="_blank" style={{ color: '#000' }}> <span style={{ fontSize: '10px' }}>Poweredby <span><img src="https://www.feedfleet.com/assests/frotnend/assets/img/logo/logo.png" alt="logo" style={{ width: 75 }} /></span></span></a>
+                  </div>
+                </div>
+              </div>
             </div>
-        )
-    }
-
-    setMessage(apikey){
-        // this.setState({apikey: apikey});
-    }
-    setPosition(pos) {
-        this.setState({position: pos});
-    }
-    setApiKey(key) {
-        this.setState({apikey: key});
-    }
+          </div>
+        );
+      }
 };
 
 export default Widget;

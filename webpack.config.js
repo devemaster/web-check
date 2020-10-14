@@ -23,20 +23,11 @@ module.exports = (env) => {
                 {
                     test: /\.css$/i,
                     use: ['style-loader', 'css-loader']
-                },
-                {
-                    test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
-                    loader: 'url-loader?limit=30000&name=[name]-[hash].[ext]'
                 }
             ],
         },
         devServer: {
             contentBase: bundleOutputDir
-        },
-        performance: {
-            hints: false,
-            maxEntrypointSize: 512000,
-            maxAssetSize: 512000
         },
         plugins: [new copyWebpackPlugin([{ from: 'demo/' }])]
     }];

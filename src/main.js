@@ -2,12 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Widget from './components/Widget/Widget';
 import Config from './config';
-import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "video-react/dist/video-react.css";
-
 
 const widgetName = Config.name;
 const widgetConfigName = widgetName + 'Config'
@@ -15,7 +9,7 @@ const defaultconfig = {
     someDefaultConfiguration: false
 };
 let widgetComponent = null;
-serviceWorker.unregister();
+
 function app(window) {
     // If we don't already have a name for widget's global object
     // assigned by the host, then they must be using the simple <script> tag method
@@ -30,7 +24,6 @@ function app(window) {
         let rawData = tag.getAttribute('data-config');
         rawData = rawData.replace(/'/g, "\"");
         let data = JSON.parse(rawData);
-
         window[widgetName] = data.name;
 
         let placeholder = {};
@@ -51,6 +44,7 @@ function app(window) {
 
         let queue = placeholder.q;
         if (queue) {
+
             for (var i = 0; i < queue.length; i++) {
                 apiHandler(queue[i][0], queue[i][1]);
             }
@@ -66,6 +60,7 @@ function apiHandler(api, params) {
     api = api.toLowerCase();
     let config = window[widgetConfigName];
 
+
     switch (api) {
         case 'init':
             config = Object.assign({}, config, params);
@@ -73,18 +68,12 @@ function apiHandler(api, params) {
 
             // get a reference to the created widget component so we can
             // call methods as needed
-            
             widgetComponent = React.createRef();
-            ReactDOM.render(<Widget ref={widgetComponent} />, document.getElementById(config.targetElementId));
+            ReactDOM.render(<Widget ref={widgetComponent} apiKey={config.apiKey} />, document.getElementById(config.targetElementId));
             break;
         case 'message':
+            // Send the message to the current widget instance
             widgetComponent.current.setMessage(params);
-            break;
-        case 'key':
-            widgetComponent.current.setApiKey(params);
-            break;
-        case 'position':
-            widgetComponent.current.setPosition(params);
             break;
         default:
             throw Error(`Method ${api} is not supported`);
@@ -92,4 +81,5 @@ function apiHandler(api, params) {
 }
 
 app(window);
+
 export default app;
