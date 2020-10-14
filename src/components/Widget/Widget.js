@@ -39,7 +39,7 @@ getVideos(apiKey) {
     formData.append('api_key', this.props.apiKey);
     axios.post('https://www.feedfleet.com/Widget/getWidgetCode', formData)
         .then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.status === 200) {
                 if (response.data.msg === "Success") {
                     this.setState({
