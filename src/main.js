@@ -68,8 +68,9 @@ function apiHandler(api, params) {
 
             // get a reference to the created widget component so we can
             // call methods as needed
-            widgetComponent = React.createRef();
-            ReactDOM.render(<Widget ref={widgetComponent} apiKey={config.apiKey} />, document.getElementById(config.targetElementId));
+            var div = document.createElement("DIV");
+            var body =document.body.appendChild(div);
+            ReactDOM.render(<Widget ref={widgetComponent} apiKey={config.apiKey} />, body);
             break;
         case 'message':
             // Send the message to the current widget instance

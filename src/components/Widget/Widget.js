@@ -82,7 +82,8 @@ getVideos(apiKey) {
 }
 showVideo() {
     this.setState({
-        showVideoBox: !this.state.showVideoBox
+        showVideoBox: !this.state.showVideoBox,
+        volumeUp:true
     });
 }
 load() {

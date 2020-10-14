@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Simple Embeddable React Widget</title>
+    <title>Feelfleet video widget</title>
 
 </head>
 
@@ -9,14 +9,13 @@
     <!-- <h1>Simple Embeddable React Widget</h1>
     <p>Demo #1: <a href="demo_sync.html">synchronous loading</a></p>
     <p>Demo #2: <a href="demo_async.html">asynchronous loading</a></p> -->
-    <div id="root">Loading...</div>
     <script>
         (function (w, d, s, o, f, js, fjs) {
-            w['feedfleet-widget'] = o; w[o] = w[o] || function () { (w[o].q = w[o].q || []).push(arguments) };
+            w['feedfleet-video-widget'] = o; w[o] = w[o] || function () { (w[o].q = w[o].q || []).push(arguments) };
             js = d.createElement(s), fjs = d.getElementsByTagName(s)[0];
             js.id = o; js.src = f; js.async = 1; fjs.parentNode.insertBefore(js, fjs);
-        }(window, document, 'script', 'w1', './widget.js'));
-        w1('init', { targetElementId: 'root',apiKey:'SkCeJE7cxTjowH5gRAN2GznQCj2LCzEi' });
+        }(window, document, 'script', 'wff', './widget.js'));
+        wff('init', {apiKey:'SkCeJE7cxTjowH5gRAN2GznQCj2LCzEi' });
     </script>
 </body>
 
