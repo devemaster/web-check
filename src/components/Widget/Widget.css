@@ -280,25 +280,7 @@
 .video-box-widget .video-react.video-react-fluid, .video-react.video-react-16-9, .video-react.video-react-4-3 {
     height: calc(85vh) !important;
 }
-.overlay-content-video-widget {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    color: white;
-    font-size: 13px;
-    font-weight: bold;
-    font-family: "Open Sans", sans-serif;
-    align-items: center;
-    padding: 5px;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 50%;
-}
+
 .widget-box-positions {
     box-sizing: content-box;
     z-index: 99999;
@@ -310,6 +292,76 @@
     border-radius: 50%;
     cursor: pointer;
 }
+.widget-box-positions .overlay-content-video-widget {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: "Open Sans", sans-serif;
+  align-items: center;
+  padding: 5px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+}
+.widget-box-positions-square {
+  box-sizing: content-box;
+  z-index: 99999;
+  border: 7px solid;
+  background: rgb(216, 216, 216);
+  height: 120px;
+  transition: transform 0.1s ease-in-out 0s;
+  width: 200px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.widget-box-positions-square .overlay-content-video-widget {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: #00000063;
+  text-align: center;
+  padding: 80px 0 0;
+  color: #fff;
+}
+.widget-box-positions-label {
+  box-sizing: content-box;
+  z-index: 99999;
+  border: 10px solid;
+  background: rgb(216, 216, 216);
+  height: 60px;
+  transition: transform 0.1s ease-in-out 0s;
+  width: 60px;
+  cursor: pointer;
+  border-radius: 50px;
+  border-right-width: 200px;
+}
+.widget-box-positions-label .overlay-content-video-widget {
+  position: absolute;
+  right: -182px;
+  top: 0;
+  left: 67px;
+  text-align: center;
+  bottom: 0;
+  padding: 18px 0;
+  font-size: 20px;
+}
+.widget-box-positions-label .video-react-controls-enabled {
+  border-radius: 100%;
+}
+.video-react.video-react-fluid, .video-react.video-react-16-9, .video-react.video-react-4-3 {
+  height: 100% !important;
+}
+
 .video-react:focus {
     outline: -webkit-focus-ring-color auto 0px !important;
 }

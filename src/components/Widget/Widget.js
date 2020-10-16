@@ -18,7 +18,9 @@ class Widget extends React.Component {
         volumeUp: true,
         bgColor : 'rgb(24, 39, 247)',
         videoBoxPosition:'widget-setting-position-open-box-bottom-right',
-        videoBoxdrawer:'widget-setting-position-bottom-right'
+        videoBoxdrawer:'widget-setting-position-bottom-right',
+        txtColor:'black',
+        wStyle:'widget-box-positions'
     };
 }
 componentDidMount() {
@@ -46,6 +48,37 @@ getVideos(apiKey) {
                         videoList: response.data.data,
                         isLoading: false
                     },()=>{
+                        //Dynamicaly set overlay text color code
+                        // hexa color to rgba
+                        let c;
+                        let bg = [0,0,0,0]
+                        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(this.state.videoList.border_color)){
+                            c= this.state.videoList.border_color.substring(1).split('');
+                            if(c.length== 3){
+                                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+                            }
+                            c= '0x'+c.join('');
+                            bg = [(c>>16)&255, (c>>8)&255, c&255,1];
+                        }
+
+                        //get text color according to bacground color
+                        let color = Math.round((((bg[0]) * 299) + 
+                            (parseInt(bg[1]) * 587) + 
+                            (parseInt(bg[2]) * 114)) / 1000); 
+                        let textColor = (color > 125) ? 'black' : 'white';
+                        
+                        //set overlay text color
+                        this.setState({txtColor:textColor})
+
+                        //set video widget style class
+                        this.state.videoList.widget_style === 1 &&
+                        this.setState({wStyle:'widget-box-positions'});
+                        this.state.videoList.widget_style === 2 &&
+                        this.setState({wStyle:'widget-box-positions-square'});
+                        this.state.videoList.widget_style === 3 &&
+                        this.setState({wStyle:'widget-box-positions-label'});
+                        
+                        //set video widget position class
                         this.state.videoList.widget_position === 'top_right'&&
                         this.setState({ videoBoxPosition:'widget-setting-position-open-box-top-right',
                                         videoBoxdrawer:'widget-setting-position-top-right'});
@@ -60,6 +93,7 @@ getVideos(apiKey) {
                                         videoBoxdrawer:'widget-setting-position-bottom-right'});
                         
                     });
+                    
                 }else {
                     this.setState({
                         errorMsg: response.data.data,
@@ -105,9 +139,11 @@ render() {
                 this.state.videoList &&
                 <div>
                 {
+                    //video widget toggle
                     (!showVideoBox) &&
-                    <div style={{borderColor: `${this.state.videoList && this.state.videoList.border_color}`}} className={`widget-box-positions ${this.state.videoBoxdrawer}` } onClick={() => this.showVideo()}>
+                    <div style={{borderColor: `${this.state.videoList && this.state.videoList.border_color}`,backgroundColor: `${this.state.videoList && this.state.videoList.border_color}`}} className={`${this.state.wStyle} ${this.state.videoBoxdrawer}` } onClick={() => this.showVideo()}>
                         <Player
+                            
                             src={this.state.videoList && this.state.videoList.video_url}
                             height={'100vh'}
                             width={'100%'}
@@ -117,10 +153,11 @@ render() {
                             autoPlay
                             muted={this.state.volumeUp}
                         ><ControlBar></ControlBar></Player>
-                        <div className="overlay-content-video-widget">{this.state.videoList && this.state.videoList.video_overlay_text}</div>
+                        <div className="overlay-content-video-widget" style={{color:`${this.state.txtColor}`}}>{this.state.videoList && this.state.videoList.video_overlay_text}</div>
                     </div>
                 }
                 {
+                    // vidoe widget
                     (showVideoBox) &&
                     <div className={`video-box-widget ${this.state.videoBoxPosition}` }>
                         <div className="widget-setting-position-open-box-content">
