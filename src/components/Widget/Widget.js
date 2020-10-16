@@ -151,6 +151,7 @@ render() {
                                 this.player = player;
                             }}
                             autoPlay
+                            loop={true}
                             muted={this.state.volumeUp}
                         ><ControlBar></ControlBar></Player>
                         <div className="overlay-content-video-widget" style={{color:`${this.state.txtColor}`}}>{this.state.videoList && this.state.videoList.video_overlay_text}</div>
@@ -182,6 +183,7 @@ render() {
                                     this.player = player;
                                 }}
                                 autoPlay
+                                loop={true}
                                 muted={this.state.volumeUp}
                             ><ControlBar></ControlBar></Player>
                             <div className="widget-setting-position-open-box-bottom-btn mb-5 pb-2">
