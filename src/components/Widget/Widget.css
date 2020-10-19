@@ -316,11 +316,12 @@
   z-index: 99999;
   border: 7px solid;
   background: rgb(216, 216, 216);
-  height: 120px;
+  height: 150px;
   transition: transform 0.1s ease-in-out 0s;
   width: 200px;
   cursor: pointer;
   border-radius: 10px;
+  overflow: hidden;
 }
 .widget-box-positions-square .overlay-content-video-widget {
   position: absolute;

@@ -71,11 +71,11 @@ getVideos(apiKey) {
                         this.setState({txtColor:textColor})
 
                         //set video widget style class
-                        this.state.videoList.widget_style === 1 &&
+                        this.state.videoList.widget_style === "circle" &&
                         this.setState({wStyle:'widget-box-positions'});
-                        this.state.videoList.widget_style === 2 &&
+                        this.state.videoList.widget_style === "sqaure" &&
                         this.setState({wStyle:'widget-box-positions-square'});
-                        this.state.videoList.widget_style === 3 &&
+                        this.state.videoList.widget_style === "oval" &&
                         this.setState({wStyle:'widget-box-positions-label'});
                         
                         //set video widget position class
