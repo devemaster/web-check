@@ -348,7 +348,6 @@
   cursor: pointer;
   border-radius: 50px;
   border-right-width: 200px;
-  overflow: hidden;
 }
 .widget-box-positions-label .overlay-content-video-widget {
   position: absolute;
@@ -366,11 +365,27 @@
 .video-react.video-react-fluid, .video-react.video-react-16-9, .video-react.video-react-4-3 {
   height: 100% !important;
 }
+.widget-box-positions-label .video-react.video-react-fluid, .widget-box-positions-label .video-react.video-react-16-9, .widget-box-positions-label .video-react.video-react-4-3 {
+  height: 100% !important;
+  padding: 32px !important;
+}
+
+.widget-box-positions-square .video-react.video-react-fluid, .widget-box-positions-square .video-react.video-react-16-9, .widget-box-positions-square .video-react.video-react-4-3 {
+  padding-top: 140% !important;
+}
 
 .video-react:focus {
     outline: -webkit-focus-ring-color auto 0px !important;
 }
-
+.overlay-text {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  color: #fff;
+  text-align: center;
+}
 .widget-box-positions .video-react {
     object-fit: cover;
     border-radius: 50%;

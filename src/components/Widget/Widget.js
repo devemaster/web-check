@@ -154,7 +154,7 @@ render() {
                             loop={true}
                             muted={this.state.volumeUp}
                         ><ControlBar></ControlBar></Player>
-                        <div className="overlay-content-video-widget" style={{color:`${this.state.txtColor}`}}>{this.state.videoList && this.state.videoList.video_overlay_text}</div>
+                        <div className="overlay-content-video-widget" style={{color:`${this.state.txtColor}`}}>{this.state.videoList && this.state.videoList.widget_label}</div>
                     </div>
                 }
                 {
@@ -174,6 +174,9 @@ render() {
                                 }
                                      <button className="btn" onClick={() => this.load()}><span className="repeat-icon"><i className="fa fa-undo"></i></span></button>
                                 </div>
+                            </div>
+                            <div className="overlay-text">
+                                <h3>{this.state.videoList && this.state.videoList.video_overlay_text}</h3>
                             </div>
                             <Player
                                 src={this.state.videoList && this.state.videoList.video_url}
