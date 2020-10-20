@@ -19,7 +19,7 @@ class Widget extends React.Component {
         bgColor : 'rgb(24, 39, 247)',
         videoBoxPosition:'widget-setting-position-open-box-bottom-right',
         videoBoxdrawer:'widget-setting-position-bottom-right',
-        txtColor:'black',
+        txtColor:'white',
         wStyle:'widget-box-positions'
     };
 }
@@ -67,8 +67,6 @@ getVideos(apiKey) {
                             (parseInt(bg[2]) * 114)) / 1000); 
                         let textColor = (color > 125) ? 'black' : 'white';
                         
-                        //set overlay text color
-                        this.setState({txtColor:textColor})
 
                         //set video widget style class
                         this.state.videoList.widget_style === "circle" &&
@@ -76,7 +74,7 @@ getVideos(apiKey) {
                         this.state.videoList.widget_style === "sqaure" &&
                         this.setState({wStyle:'widget-box-positions-square'});
                         this.state.videoList.widget_style === "oval" &&
-                        this.setState({wStyle:'widget-box-positions-label'});
+                        this.setState({wStyle:'widget-box-positions-label',txtColor:textColor});
                         
                         //set video widget position class
                         this.state.videoList.widget_position === 'top_right'&&
