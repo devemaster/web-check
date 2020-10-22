@@ -179,6 +179,7 @@
     color: white;
     cursor: pointer;
     border:none !important;
+    padding: 0 !important;
 }
 .widget-setting-position-open-box-close-btn button:focus {
     outline: 0 !important;
@@ -192,12 +193,13 @@
     align-items: center;
     width: 40px !important;
     height: 40px !important;
-    border-radius: 100%;
+    border-radius: 100% !important;
     background-color: hsla(0,0%,100%,.5);
     color: #0b0b44;
     cursor: pointer;
     border:none !important;
     font-size: 20px !important;
+    padding: 0 !important;
 }
 .widget-setting-position-open-box-btns button:focus {
     outline: 0;
