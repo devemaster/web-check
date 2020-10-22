@@ -57,10 +57,12 @@
     position: fixed;
     bottom: 8px;
     left: 16px;
-    min-width: 360px;
+    min-width: 300px;
+    max-width:360px;
     border: 1px solid #e9e9e9;
     border-radius: 4px;
     max-height: 90vh;
+    width: 100%;
 
 }
 .widget-setting-position-center-left {
@@ -165,21 +167,21 @@
     margin-top: 10px;
 }
 .widget-setting-position-open-box-close-btn button, .widget-setting-position-open-box-close-btn button:hover{
-    font-size: 28px;
+    font-size: 32px !important;
     display: inline-flex;
     padding-top: 0;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 100% !important;
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     cursor: pointer;
-    border:none;
+    border:none !important;
 }
 .widget-setting-position-open-box-close-btn button:focus {
-    outline: 0;
+    outline: 0 !important;
     box-shadow: 0 0 0 0rem rgba(0,123,255,.25);
 }
 .widget-setting-position-open-box-btns button, .widget-setting-position-open-box-btns button:hover{
@@ -188,14 +190,14 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 100%;
     background-color: hsla(0,0%,100%,.5);
     color: #0b0b44;
     cursor: pointer;
-    border:none;
-    font-size: 20px;
+    border:none !important;
+    font-size: 20px !important;
 }
 .widget-setting-position-open-box-btns button:focus {
     outline: 0;

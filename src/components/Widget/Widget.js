@@ -115,6 +115,12 @@ getVideos(apiKey) {
 showVideo() {
     this.setState({
         showVideoBox: !this.state.showVideoBox,
+        volumeUp:false
+    });
+}
+hideVideo(){
+    this.setState({
+        showVideoBox: !this.state.showVideoBox,
         volumeUp:true
     });
 }
@@ -162,7 +168,7 @@ render() {
                         <div className="widget-setting-position-open-box-content">
                             <div className="widget-setting-position-open-box-heading">
                                 <div className="widget-setting-position-open-box-close-btn">
-                                    <button className="btn" onClick={() => this.showVideo()}><span aria-hidden="true">&times;</span></button>
+                                    <button className="btn" onClick={() => this.hideVideo()}><span aria-hidden="true">&times;</span></button>
                                 </div>
                                 <div className="widget-setting-position-open-box-btns btn-group">
                                 {
