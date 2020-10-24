@@ -145,7 +145,7 @@ render() {
                 {
                     //video widget toggle
                     (!showVideoBox) &&
-                    <div style={{borderColor: `${this.state.videoList && this.state.videoList.border_color}`,backgroundColor: `${this.state.videoList && this.state.videoList.border_color}`}} className={`${this.state.wStyle} ${this.state.videoBoxdrawer}` } onClick={() => this.showVideo()}>
+                    <div style={{borderColor: `${this.state.videoList && this.state.videoList.border_color}`,backgroundColor: `${this.state.videoList && this.state.videoList.border_color}`}} className={`widget-toggle ${this.state.wStyle} ${this.state.videoBoxdrawer}` } onClick={() => this.showVideo()}>
                         <Player
                             
                             src={this.state.videoList && this.state.videoList.video_url}
