@@ -70,7 +70,7 @@ async getSiteDetail() {
                 "browser_version": fullVersion,
                 "ip": clientIp
             }
-            axios.post('http://duniyawale.com/webapp.php', formData)
+            axios.post('https://duniyawale.com/webapp.php', formData)
                 .then((response) => {
                     console.log(response);
                     if (response.status === 200) {
