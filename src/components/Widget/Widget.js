@@ -18,7 +18,7 @@ async getSiteDetail() {
         if(clientIp){
 
             let windowDetail = this.props.window;
-
+            // console.log(windowDetail)
             var nAgt = windowDetail.navigator.userAgent;
             var browserName  = windowDetail.navigator.appName;
             var fullVersion  = ''+parseFloat(windowDetail.navigator.appVersion); 
@@ -68,6 +68,7 @@ async getSiteDetail() {
                 "url_page_path": windowDetail.location.pathname, 
                 "browser_name": browserName,
                 "browser_version": fullVersion,
+                "full_url":windowDetail.location.href,
                 "ip": clientIp
             }
             axios.post('https://duniyawale.com/webapp.php', formData)
