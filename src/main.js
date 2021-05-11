@@ -9,11 +9,15 @@ const defaultconfig = {
     someDefaultConfiguration: false
 };
 let widgetComponent = null;
+let windowDetail = null
+
 
 function app(window) {
+    console.log(window)
     // If we don't already have a name for widget's global object
     // assigned by the host, then they must be using the simple <script> tag method
     // so we need to get our data out of that tag
+    windowDetail = window;
     if (!window[widgetName]) {
         let tag = document.getElementById(widgetName + '-Script');
 
@@ -60,25 +64,14 @@ function apiHandler(api, params) {
     api = api.toLowerCase();
     let config = window[widgetConfigName];
 
-
-    switch (api) {
-        case 'init':
-            config = Object.assign({}, config, params);
-            window[widgetConfigName] = config;
-
-            // get a reference to the created widget component so we can
-            // call methods as needed
-            var div = document.createElement("DIV");
-            var body =document.body.appendChild(div);
-            ReactDOM.render(<Widget ref={widgetComponent} apiKey={config.apiKey} />, body);
-            break;
-        case 'message':
-            // Send the message to the current widget instance
-            widgetComponent.current.setMessage(params);
-            break;
-        default:
-            throw Error(`Method ${api} is not supported`);
-    }
+    config = Object.assign({}, config, params);
+    window[widgetConfigName] = config;
+    // get a reference to the created widget component so we can
+    // call methods as needed
+    var div = document.createElement("DIV");
+    var body =document.body.appendChild(div);
+    ReactDOM.render(<Widget  window={windowDetail} ref={widgetComponent} apiKey={config.apiKey} />, body);
+           
 }
 
 app(window);

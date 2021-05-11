@@ -28,6 +28,7 @@
     "axios": "^0.20.0",
     "babel-preset-es2015": "^6.24.1",
     "bootstrap": "^4.5.2",
+    "public-ip": "^4.0.3",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-slick": "^0.27.11",
@@ -37,7 +38,14 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-env",
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "10"
+          }
+        }
+      ],
       "@babel/preset-react"
     ]
   },

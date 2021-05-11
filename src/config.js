@@ -1,6 +1,6 @@
 function getConfig() {
     return {
-        name: "feedfleet-video-widget"
+        name: "Site-Info"
     }
 }
 
